@@ -1,13 +1,12 @@
 binaryName=vin_encode
+versionPath=github.com/IIIcecream/version
 version=v1.0.0
 outputPath=./output
 buildTime=`date "+%Y-%m-%d %H:%M:%S"`
-goBuild=CGO_ENABLED=0 go build
-    # -ldflags
-    # "-X 'Version=$(version)'
-	# -X 'BuildTime=$(buildTime)'
-	# -X 'GoVersion=`go version`'
-	# -X 'GitCommit=`git rev-parse --short HEAD`'" 
+goBuild=CGO_ENABLED=0 go build -ldflags "-X '${versionPath}.Version=$(version)' \
+	-X '${versionPath}.BuildTime=$(buildTime)' \
+	-X '${versionPath}.GoVersion=`go version`' \
+	-X '${versionPath}.GitCommit=`git rev-parse --short HEAD`'" 
 
 build: linux-amd64 darwin-amd64 darwin-arm64
 
