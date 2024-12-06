@@ -36,7 +36,7 @@ func reverseString(s string) string {
 }
 
 // 将 input 从 inputBase 进制转成 outputBase 进制，如36进制->62进制
-func baseConovert(input string, inputBase int, outputBase int) (string, error) {
+func BaseConvert(input string, inputBase int, outputBase int) (string, error) {
 	if inputBase <= 0 || inputBase > 62 {
 		return "", fmt.Errorf("invalid inputBase: %d", inputBase)
 	}

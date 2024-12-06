@@ -3,12 +3,12 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/spf13/cobra"
 	"github.com/IIIcecream/go-tools/base_convert"
+	"github.com/spf13/cobra"
 )
 
 func encode(input string) string {
-	ret, _ := base_convert.baseConovert(input, 36, 62)
+	ret, _ := base_convert.BaseConvert(input, 36, 62)
 	return ret
 }
 
