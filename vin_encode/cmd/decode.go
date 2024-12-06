@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
+	"github.com/IIIcecream/go-tools/base_convert"
 )
 
 func decode(output string) string {
