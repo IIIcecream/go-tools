@@ -1,4 +1,4 @@
-package convert
+package base_convert
 
 import (
 	"fmt"

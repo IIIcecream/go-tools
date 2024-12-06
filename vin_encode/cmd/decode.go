@@ -4,11 +4,10 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"github.com/IIIcecream/go-tools/convert"
 )
 
 func decode(output string) string {
-	ret, _ := convert.baseConovert(output, 62, 36)
+	ret, _ := base_convert.baseConovert(output, 62, 36)
 	return ret
 }
 
