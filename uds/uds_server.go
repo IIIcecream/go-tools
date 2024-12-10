@@ -25,13 +25,7 @@ func (server *UdsServer) Run(ctx context.Context) error {
 	os.Remove(server.addr)
 
 	conn, err := net.ListenPacket("unixgram", server.addr)
-
-	// go
 	t := time.Now().Add(time.Second * 20)
-
-	// c++思路
-	t = time.Now()
-	t.Add(time.Second * 20)
 
 	conn.SetReadDeadline(t)
 
