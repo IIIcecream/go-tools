@@ -20,6 +20,9 @@ var sendCmd = &cobra.Command{
 			log.Fatalln(err)
 			return
 		}
+		if id == 1 {
+			id = 8636718
+		}
 		token, err := cmd.Flags().GetString("token")
 		if err != nil {
 			log.Fatalln(err)
