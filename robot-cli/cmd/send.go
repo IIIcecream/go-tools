@@ -13,7 +13,7 @@ import (
 
 var sendCmd = &cobra.Command{
 	Use:   "send",
-	Short: "发送消息",
+	Short: "输出消息",
 	Run: func(cmd *cobra.Command, args []string) {
 		id, err := cmd.Flags().GetInt32("id")
 		if err != nil {
