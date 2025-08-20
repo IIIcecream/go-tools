@@ -162,7 +162,7 @@ Examples:
 		return nil
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("password is %s\n", create_random_password())
+		fmt.Println("password is ", create_random_password())
 	},
 }
 
