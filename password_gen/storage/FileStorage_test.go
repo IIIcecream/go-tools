@@ -15,7 +15,7 @@ func TestSavePassword(t *testing.T) {
 
 	password := "test1"
 	fs.SavePassword("test1", password)
-	entries, e := fs.FindPassword("test1")
+	entries, e := fs.FindPasswords("test1")
 	if e != nil {
 		t.Errorf("find password failed: %s", e)
 	}
