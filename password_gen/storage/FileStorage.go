@@ -128,7 +128,7 @@ func (ps *FileStorage) SavePassword(key, value string) error {
 	return nil
 }
 
-func (ps *FileStorage) getPasswords(filterKey string) ([]PasswordEntry, error) {
+func (ps *FileStorage) FindPasswords(filterKey string) ([]PasswordEntry, error) {
 	derivedKey := deriveKey(encryptionKey)
 
 	data, err := os.ReadFile(ps.storagePath)
@@ -161,26 +161,10 @@ func (ps *FileStorage) getPasswords(filterKey string) ([]PasswordEntry, error) {
 			return nil, fmt.Errorf("failed to unmarshal password entry: %v", err)
 		}
 
-		if filterKey == "" {
+		if filterKey == "" || filterKey == entry.Key {
 			entries = append(entries, entry)
-		} else if filterKey == entry.Key {
-			entries = append(entries, entry)
-			break
 		}
 	}
 
 	return entries, nil
-}
-
-func (ps *FileStorage) FindPassword(key string) (PasswordEntry, error) {
-	entries, e := ps.getPasswords(key)
-	if len(entries) != 1 {
-		return PasswordEntry{}, fmt.Errorf("can not find key: %s", key)
-	}
-	return entries[0], e
-}
-
-// ListPasswords 列出所有保存的密码(需要解密)
-func (ps *FileStorage) ListPasswords() ([]PasswordEntry, error) {
-	return ps.getPasswords("")
 }

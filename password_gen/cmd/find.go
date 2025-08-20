@@ -14,12 +14,6 @@ var (
 var findCmd = &cobra.Command{
 	Use:   "find",
 	Short: "find saved passwords by key",
-	PreRunE: func(cmd *cobra.Command, args []string) error {
-		if len(find_key) == 0 {
-			return fmt.Errorf("--key is empty")
-		}
-		return nil
-	},
 	Run: func(cmd *cobra.Command, args []string) {
 		s, err := storage.New()
 		if err != nil {
@@ -27,12 +21,18 @@ var findCmd = &cobra.Command{
 			return
 		}
 
-		entry, err := s.FindPassword(find_key)
+		entries, err := s.FindPasswords(find_key)
 		if err != nil {
 			fmt.Printf("Failed to list passwords: %v\n", err)
 			return
 		}
-		fmt.Printf("password is : %s\n", entry.Password)
+		for i, entry := range entries {
+			fmt.Printf("%d.\n", i+1)
+			fmt.Printf("   Key: %s\n", entry.Key)
+			fmt.Printf("   Password: %s\n", entry.Password)
+			fmt.Printf("   Created: %s\n", entry.Timestamp)
+			fmt.Println()
+		}
 	},
 }
 
