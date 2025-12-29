@@ -4,12 +4,16 @@ import (
 	"archive/zip"
 	"fmt"
 	"io"
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
 )
 
 func Unzip(srcZip, destDir string) error {
+	log.Println("begin unzip...")
+	defer log.Println("end unzip")
+
 	r, err := zip.OpenReader(srcZip)
 	if err != nil {
 		return err

@@ -71,6 +71,9 @@ func transCurDir() (string, error) {
 }
 
 func NewParser(opts ...ParserOption) (*Parser, error) {
+	log.Println("begin init params...")
+	defer log.Println("end init params")
+
 	options := &ParserOptions{}
 
 	for _, opt := range opts {
@@ -109,6 +112,9 @@ type ParsedResult struct {
 }
 
 func (parser *Parser) Parse() error {
+	log.Println("begin parse...")
+	defer log.Println("end parse")
+
 	if parser.unzip {
 		err := Unzip(parser.srcZip, parser.destDir)
 		if err != nil {
@@ -122,16 +128,7 @@ func (parser *Parser) Parse() error {
 		return err
 	}
 
-	var errList []string
-	var parsedResults []ParsedResult
-	for _, inputFile := range files {
-		outputResult, err := parser.convert(inputFile)
-		if err != nil {
-			errList = append(errList, fmt.Sprintf("%s: %v", inputFile, err))
-			continue
-		}
-		parsedResults = append(parsedResults, outputResult)
-	}
+	parsedResults, errList := parser.convert(files)
 
 	if parser.merge {
 		err := parser.Merge(parsedResults)
@@ -180,9 +177,27 @@ func (parser *Parser) getFiles() ([]string, error) {
 	return ret, err
 }
 
+func (parser *Parser) convert(files []string) ([]ParsedResult, []string) {
+	log.Println("begin convert...")
+	defer log.Println("end convert")
+
+	var parsedResults []ParsedResult
+	var errList []string
+
+	for _, inputFile := range files {
+		outputResult, err := parser.convertOne(inputFile)
+		if err != nil {
+			errList = append(errList, fmt.Sprintf("%s: %v", inputFile, err))
+			continue
+		}
+		parsedResults = append(parsedResults, outputResult)
+	}
+	return parsedResults, errList
+}
+
 // 1. 第一行的 base + 每一行的 offset 进行时间戳还原
 // 2. 将时区 +8
-func (parser *Parser) convert(filePath string) (ParsedResult, error) {
+func (parser *Parser) convertOne(filePath string) (ParsedResult, error) {
 	file, err := os.Open(filePath)
 	if err != nil {
 		return ParsedResult{}, err
@@ -278,6 +293,9 @@ func appendFile(w *bufio.Writer, path string) error {
 }
 
 func (parser *Parser) Merge(results []ParsedResult) error {
+	log.Println("begin merge...")
+	defer log.Println("end merge...")
+
 	// module -> []result
 	grouped := make(map[string][]ParsedResult)
 

@@ -63,8 +63,8 @@ func init() {
 	parseCmd.Flags().StringSliceP(
 		"modules",
 		"m",
-		[]string{"APP_PROXY", "EVENTTASK", "PERSIST"},
-		"log modules to parse (e.g. APP_PROXY,EVENTTASK,PERSIST)",
+		[]string{"APP_PROXY", "EVENTTASK", "APP_PERSIST", "EVENTTASK_PERSIST"},
+		"log modules to parse (e.g. APP_PROXY,EVENTTASK,APP_PERSIST,EVENTTASK_PERSIST)",
 	)
 	rootCmd.AddCommand(parseCmd)
 }

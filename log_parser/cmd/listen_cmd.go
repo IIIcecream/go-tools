@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"fmt"
 	"log"
 	"path/filepath"
 	"strings"
@@ -66,7 +65,7 @@ var listenCmd = &cobra.Command{
 				}
 				if event.Op&fsnotify.Create == fsnotify.Create {
 					if isZipFile(event.Name) {
-						fmt.Println("Get new zip file:", event.Name)
+						log.Println("Get new zip file:", event.Name)
 						parser, err := NewParser(
 							WithMerge(merge),
 							WithUnzip(unzip),
@@ -81,7 +80,8 @@ var listenCmd = &cobra.Command{
 						if err != nil {
 							log.Fatalln(err)
 						}
-						fmt.Println("parsed succ")
+						log.Println("parsed succ")
+						log.Println("Watching ", srcDir)
 					}
 				}
 			case err, ok := <-watcher.Errors:
@@ -101,13 +101,13 @@ func isZipFile(path string) bool {
 func init() {
 	// listenCmd.Flags().BoolP("unzip", "u", true, "unzip at first")
 	listenCmd.Flags().Bool("merge", true, "merge same module log after parsed")
-	listenCmd.Flags().StringP("srcDir", "s", "./", "src zip file directory")
+	listenCmd.Flags().StringP("srcDir", "s", "./", "listen zip file directory")
 	listenCmd.Flags().StringP("destDir", "d", "./", "dest directory")
 	listenCmd.Flags().StringSliceP(
 		"modules",
 		"m",
-		[]string{"APP_PROXY", "EVENTTASK", "PERSIST"},
-		"log modules to parse (e.g. APP_PROXY,EVENTTASK,PERSIST)",
+		[]string{"APP_PROXY", "EVENTTASK", "APP_PERSIST", "EVENTTASK_PERSIST"},
+		"log modules to parse (e.g. APP_PROXY,EVENTTASK,APP_PERSIST,EVENTTASK_PERSIST)",
 	)
 	rootCmd.AddCommand(listenCmd)
 }
