@@ -16,13 +16,14 @@ type Listener struct {
 var listenCmd = &cobra.Command{
 	Use:   "listen",
 	Short: "listen current dir, parse new zip file",
-	Long: "If a new zip file appears in src dir, it will immediately perform log parsing and output the parsing result file to dest dir",
+	Long:  "If a new zip file appears in src dir, it will immediately perform log parsing and output the parsing result file to dest dir",
 	Run: func(cmd *cobra.Command, args []string) {
-		unzip, err := cmd.Flags().GetBool("unzip")
-		if err != nil {
-			log.Fatalln(err)
-			return
-		}
+		unzip := true
+		// unzip, err := cmd.Flags().GetBool("unzip")
+		// if err != nil {
+		// 	log.Fatalln(err)
+		// 	return
+		// }
 		merge, err := cmd.Flags().GetBool("merge")
 		if err != nil {
 			log.Fatalln(err)
@@ -66,14 +67,21 @@ var listenCmd = &cobra.Command{
 				if event.Op&fsnotify.Create == fsnotify.Create {
 					if isZipFile(event.Name) {
 						fmt.Println("Get new zip file:", event.Name)
-						parser := NewParser(
+						parser, err := NewParser(
 							WithMerge(merge),
 							WithUnzip(unzip),
-							WithSrcZip(srcDir+event.Name),
+							WithSrcZip(event.Name),
 							WithDestDir(destDir),
 							WithModules(modules...),
 						)
-						parser.Parse()
+						if err != nil {
+							log.Fatalln(err)
+						}
+						err = parser.Parse()
+						if err != nil {
+							log.Fatalln(err)
+						}
+						fmt.Println("parsed succ")
 					}
 				}
 			case err, ok := <-watcher.Errors:
@@ -91,15 +99,15 @@ func isZipFile(path string) bool {
 }
 
 func init() {
-	listenCmd.Flags().BoolP("unzip", "u", true, "unzip at first")
+	// listenCmd.Flags().BoolP("unzip", "u", true, "unzip at first")
 	listenCmd.Flags().Bool("merge", true, "merge same module log after parsed")
-	listenCmd.Flags().StringP("srcDir", "s", ".", "src zip file directory")
-	listenCmd.Flags().StringP("destDir", "d", ".", "dest directory")
+	listenCmd.Flags().StringP("srcDir", "s", "./", "src zip file directory")
+	listenCmd.Flags().StringP("destDir", "d", "./", "dest directory")
 	listenCmd.Flags().StringSliceP(
 		"modules",
 		"m",
-		[]string{},
-		"log modules to parse (e.g. app_proxy,eventtask)",
+		[]string{"APP_PROXY", "EVENTTASK", "PERSIST"},
+		"log modules to parse (e.g. APP_PROXY,EVENTTASK,PERSIST)",
 	)
 	rootCmd.AddCommand(listenCmd)
 }

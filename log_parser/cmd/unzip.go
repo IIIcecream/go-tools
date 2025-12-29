@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-func unzip(srcZip, destDir string) error {
+func Unzip(srcZip, destDir string) error {
 	r, err := zip.OpenReader(srcZip)
 	if err != nil {
 		return err
@@ -19,7 +19,6 @@ func unzip(srcZip, destDir string) error {
 	for _, f := range r.File {
 		targetPath := filepath.Join(destDir, f.Name)
 
-		// 防止 Zip Slip
 		if !strings.HasPrefix(targetPath, filepath.Clean(destDir)+string(os.PathSeparator)) {
 			return fmt.Errorf("illegal file path: %s", targetPath)
 		}

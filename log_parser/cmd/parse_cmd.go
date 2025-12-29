@@ -10,11 +10,12 @@ var parseCmd = &cobra.Command{
 	Use:   "parse",
 	Short: "parse log files once",
 	Run: func(cmd *cobra.Command, args []string) {
-		unzip, err := cmd.Flags().GetBool("unzip")
-		if err != nil {
-			log.Fatalln(err)
-			return
-		}
+		unzip := true
+		// unzip, err := cmd.Flags().GetBool("unzip")
+		// if err != nil {
+		// 	log.Fatalln(err)
+		// 	return
+		// }
 		merge, err := cmd.Flags().GetBool("merge")
 		if err != nil {
 			log.Fatalln(err)
@@ -35,27 +36,35 @@ var parseCmd = &cobra.Command{
 			log.Fatalln(err)
 			return
 		}
-		parser := NewParser(
+		parser, err := NewParser(
 			WithMerge(merge),
 			WithUnzip(unzip),
 			WithSrcZip(srcZip),
 			WithDestDir(destDir),
 			WithModules(modules...),
 		)
-		parser.Parse()
+		if err != nil {
+			log.Fatalln(err)
+			return
+		}
+		err = parser.Parse()
+		if err != nil {
+			log.Fatalln(err)
+			return
+		}
 	},
 }
 
 func init() {
-	parseCmd.Flags().BoolP("unzip", "u", true, "unzip at first")
+	// parseCmd.Flags().BoolP("unzip", "u", true, "unzip at first")
 	parseCmd.Flags().Bool("merge", true, "merge same module log after parsed")
-	parseCmd.Flags().StringP("srcZip", "s", ".", "src zip file path")
-	parseCmd.Flags().StringP("destDir", "d", ".", "dest path")
+	parseCmd.Flags().StringP("srcZip", "s", "./", "src zip file path")
+	parseCmd.Flags().StringP("destDir", "d", "./", "dest path")
 	parseCmd.Flags().StringSliceP(
 		"modules",
 		"m",
-		[]string{},
-		"log modules to parse (e.g. app_proxy,eventtask)",
+		[]string{"APP_PROXY", "EVENTTASK", "PERSIST"},
+		"log modules to parse (e.g. APP_PROXY,EVENTTASK,PERSIST)",
 	)
 	rootCmd.AddCommand(parseCmd)
 }

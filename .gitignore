@@ -31,3 +31,9 @@ output
 
 *.enc
 *.tar.gz
+*.zip
+*.merged
+*.pl9
+*.pl9.rrzipped
+*.pl9.rrzipped.txt
+*.log

@@ -1,4 +1,4 @@
-binaryName=map-parser-cli
+binaryName=log_parser
 versionPath=github.com/IIIcecream/version
 version=v1.0.0
 outputPath=./output
